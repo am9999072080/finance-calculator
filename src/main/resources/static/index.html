@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Финансовый Калькулятор</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding-top: 50px; background-color: #f4f4f4; color: #333; }
+        .form-container { max-width: 400px; margin: auto; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); background-color: white; }
+        input[type=number], button { width: 100%; padding: 10px; margin-bottom: 10px; font-size: 16px; border-radius: 4px; outline: none; transition: all 0.3s ease; }
+        input[type=number]:focus, button:focus { box-shadow: 0 0 5px rgba(0,0,0,0.1); }
+        h1 { font-size: 2em; margin-bottom: 20px; color: #3c8dbc; }
+        p { font-size: 1.2em; line-height: 1.5; }
+        .result-message { font-weight: bold; color: green; display: none; }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h1>Расчет чистого баланса</h1>
+    <form id="balanceForm">
+        <input type="number" name="assets" placeholder="Активы"><br>
+        <input type="number" name="liabilities" placeholder="Обязательства"><br>
+        <input type="number" name="income" placeholder="Доход"><br>
+        <input type="number" name="expenses" placeholder="Расходы"><br>
+        <button type="submit">Рассчитать чистый баланс</button>
+    </form>
+    <div class="result-message"></div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+    $('#balanceForm').on('submit', function(event){
+        event.preventDefault(); // отменяем стандартный submit формы
+
+        // Собираем данные из полей формы
+        const formData = {
+            assets: parseFloat($('[name="assets"]').val()),
+            liabilities: parseFloat($('[name="liabilities"]').val()),
+            income: parseFloat($('[name="income"]').val()),
+            expenses: parseFloat($('[name="expenses"]').val())
+        };
+
+        // Отправляем AJAX-запрос
+        $.ajax({
+            url: '/calculate',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function(response) {
+                $('.result-message').text(`Чистый баланс: ${response.netBalance}, Статус: ${response.message}`).show();
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                console.error(textStatus, errorThrown);
+                alert("Ошибка при расчете.");
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>
