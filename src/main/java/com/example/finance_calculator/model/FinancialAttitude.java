@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FinancialAttitude {
-    private double assets;
-    private double liabilities;
-    private double income;
-    private double expenses;
+    private Double assets;
+    private Double liabilities;
+    private Double income;
+    private Double expenses;
 }
